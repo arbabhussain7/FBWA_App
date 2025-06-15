@@ -111,7 +111,7 @@ lib/
 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/FBWA.git
+git clone https://github.com/arbabhussain7/FBWA.git
 cd FBWA
 ```
 
@@ -128,16 +128,6 @@ flutter run
 ```
 
 ---
-
-## ✅ Future Improvements
-
-* Multi-language support (Dzongkha & English)
-* Export/import data (cloud backup)
-* Match scheduling & score tracking
-* Dark mode UI
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
