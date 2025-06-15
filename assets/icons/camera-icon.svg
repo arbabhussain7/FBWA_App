@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="31" height="31" viewBox="0 0 31 31">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle" width="19" height="19" transform="translate(-0.074 -0.074)" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="upload" transform="translate(0.414 0.414)">
+    <circle id="Oval" cx="15.5" cy="15.5" r="15.5" transform="translate(-0.414 -0.414)" fill="#182233" opacity="0.8"/>
+    <g id="Clipped" transform="translate(5.66 5.66)">
+      <rect id="Rectangle-2" data-name="Rectangle" width="19" height="19" transform="translate(-0.074 -0.074)" fill="none"/>
+      <g id="Clipped-2" data-name="Clipped" clip-path="url(#clip-path)">
+        <path id="Shape" d="M16.508,14.15H.786A.787.787,0,0,1,0,13.363V3.145a.787.787,0,0,1,.786-.786h2.3a1.573,1.573,0,0,0,1.309-.7L5.269.35A.786.786,0,0,1,5.924,0h5.447a.784.784,0,0,1,.654.35L12.9,1.659a1.567,1.567,0,0,0,1.307.7h2.3a.787.787,0,0,1,.786.786V13.363A.787.787,0,0,1,16.508,14.15ZM8.648,4.717a3.537,3.537,0,1,0,3.537,3.537A3.542,3.542,0,0,0,8.648,4.717Z" transform="translate(0.786 2.358)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,4 @@
+<svg id="Button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <rect id="Rectangle" width="24" height="24" rx="2" fill="#f6cf18"/>
+  <path id="Path" d="M.1,13.236a.333.333,0,0,1,0-.471l6.1-6.1L.1.568A.333.333,0,0,1,.57.1L6.9,6.431a.334.334,0,0,1,0,.472L.57,13.236A.334.334,0,0,1,.1,13.236Z" transform="translate(9 5.333)" fill="#fff" stroke="#fff" stroke-width="1"/>
+</svg>

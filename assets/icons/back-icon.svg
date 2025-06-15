@@ -1,0 +1,14 @@
+<svg id="Burger" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle" width="16" height="16" fill="none"/>
+    </clipPath>
+  </defs>
+  <rect id="Rectangle-2" data-name="Rectangle" width="24" height="24" rx="4" fill="#f6cf18"/>
+  <g id="Clipped" transform="translate(4 4)">
+    <rect id="Rectangle-3" data-name="Rectangle" width="16" height="16" fill="none"/>
+    <g id="Clipped-2" data-name="Clipped" clip-path="url(#clip-path)">
+      <path id="Path" d="M7.138,1.138A.666.666,0,1,0,6.2.2l-6,6a.665.665,0,0,0,0,.942l6,6a.666.666,0,1,0,.942-.942L2.277,7.334h10.39a.667.667,0,0,0,0-1.334H2.277Z" transform="translate(1.333 1.333)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
