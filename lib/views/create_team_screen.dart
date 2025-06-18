@@ -6,7 +6,6 @@ import 'package:football_app/constant/assets.dart';
 import 'package:football_app/constant/colors.dart';
 import 'package:football_app/viewModel/team_controller.dart';
 import 'package:football_app/views/home_screen.dart';
-import 'package:football_app/views/select_club.dart';
 import 'package:football_app/views/widgets/custom_button.dart';
 import 'package:football_app/views/widgets/custom_header.dart';
 import 'package:get/get.dart';
@@ -164,39 +163,39 @@ class CreateTeamScreen extends StatelessWidget {
                       SizedBox(height: 12.h),
 
                       // Select Club
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => SelectClub());
-                        },
-                        child: Obx(
-                          () => Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 10.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  teamController.clubDisplayText,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontFamily: 'SegoeUI',
-                                    color: AppColors.whiteColor.withOpacity(
-                                      0.7,
-                                    ),
-                                  ),
-                                ),
-                                SvgPicture.asset(ImageAssets.forwardIcon),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 266.h),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.to(() => SelectClub());
+                      //   },
+                      //   child: Obx(
+                      //     () => Container(
+                      //       padding: EdgeInsets.symmetric(
+                      //         horizontal: 12.w,
+                      //         vertical: 10.h,
+                      //       ),
+                      //       decoration: BoxDecoration(
+                      //         color: AppColors.greyColor,
+                      //       ),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Text(
+                      //             teamController.clubDisplayText,
+                      //             style: TextStyle(
+                      //               fontSize: 14.sp,
+                      //               fontFamily: 'SegoeUI',
+                      //               color: AppColors.whiteColor.withOpacity(
+                      //                 0.7,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           SvgPicture.asset(ImageAssets.forwardIcon),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      SizedBox(height: 300.h),
 
                       GestureDetector(
                         onTap: _createTeam,

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:football_app/data/localDB/db_helper.dart';
 import 'package:football_app/model/player_model.dart';
+import 'package:football_app/model/team_model.dart';
 import 'package:football_app/views/player_manage_screen.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,11 +19,25 @@ class PlayerController extends GetxController {
   var selectedImagePath = ''.obs;
   final ImagePicker _picker = ImagePicker();
 
+  // Team selection variables
+  var allTeams = <Team>[].obs;
+  var selectedTeam = Rxn<Team>();
+  var isLoadingTeams = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     _initializeControllers();
     loadPlayers();
+    loadAllTeams();
+  }
+
+  // ADD THIS METHOD - This will be called whenever the screen becomes visible
+  @override
+  void onReady() {
+    super.onReady();
+    // Refresh teams when screen is ready (good for when coming from team creation)
+    loadAllTeams();
   }
 
   void _initializeControllers() {
@@ -31,10 +46,35 @@ class PlayerController extends GetxController {
     positionController = TextEditingController();
   }
 
+  Future<void> loadAllTeams() async {
+    try {
+      isLoadingTeams.value = true;
+      List<Team> teams = await DatabaseHelper.getAllTeams();
+      allTeams.value = teams;
+      print('Loaded ${teams.length} teams'); // Debug log
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load teams: $e');
+    } finally {
+      isLoadingTeams.value = false;
+    }
+  }
+
+  // ADD THIS METHOD - Force refresh teams (can be called manually)
+  Future<void> refreshTeams() async {
+    print('Refreshing teams...'); // Debug log
+    await loadAllTeams();
+  }
+
+  void setSelectedTeam(Team? team) {
+    selectedTeam.value = team;
+  }
+
   Future<void> loadPlayers() async {
     try {
       isLoading.value = true;
-      players.value = await DatabaseHelper.getAllPlayers();
+      List<Map<String, dynamic>> playersData =
+          await DatabaseHelper.getPlayersWithTeamInfo();
+      players.value = playersData.map((data) => Player.fromMap(data)).toList();
       totalPlayersCount.value = players.length;
     } catch (e) {
       Get.snackbar('Error', 'Failed to load players: $e');
@@ -161,7 +201,7 @@ class PlayerController extends GetxController {
   }
 
   Future<void> createPlayer() async {
-    if (!_validateInputs()) return;
+    if (!await _validateInputs()) return;
     try {
       isLoading.value = true;
 
@@ -174,39 +214,175 @@ class PlayerController extends GetxController {
         pImg: selectedImagePath.value.isNotEmpty
             ? selectedImagePath.value
             : null,
+        teamId: selectedTeam.value?.sNo,
       );
 
       await DatabaseHelper.insertPlayer(newPlayer);
 
       _clearForm();
       await loadPlayers();
-      Get.snackbar('Success', 'Player created successfully!');
+      Get.snackbar(
+        'Success',
+        'Player created successfully!',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+        duration: Duration(seconds: 2),
+      );
       Get.off(() => PlayerManageScreen());
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create player: $e');
+      // Check if it's a UNIQUE constraint error for jersey number
+      if (e.toString().contains('UNIQUE constraint failed') &&
+          e.toString().contains('j_number')) {
+        Get.snackbar(
+          'Error',
+          'Jersey Number ${jerseyNumberController.text.trim()} player is exist',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(12),
+          borderRadius: 8,
+          duration: Duration(seconds: 3),
+        );
+      } else if (e.toString().contains('UNIQUE constraint failed') &&
+          e.toString().contains('p_name')) {
+        Get.snackbar(
+          'Error',
+          'Player name already exists in this team',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(12),
+          borderRadius: 8,
+          duration: Duration(seconds: 3),
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to create player. Please try again.',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(12),
+          borderRadius: 8,
+        );
+      }
+      print('Create player error: $e'); // Keep this for debugging
     } finally {
       isLoading.value = false;
     }
   }
 
-  bool _validateInputs() {
+  Future<bool> _validateInputs() async {
+    // Basic field validations
     if (playerNameController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter player name');
+      Get.snackbar(
+        'Error',
+        'Please enter player name',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
       return false;
     }
 
     if (jerseyNumberController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter jersey number');
+      Get.snackbar(
+        'Error',
+        'Please enter jersey number',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
       return false;
     }
 
     if (int.tryParse(jerseyNumberController.text.trim()) == null) {
-      Get.snackbar('Error', 'Please enter valid jersey number');
+      Get.snackbar(
+        'Error',
+        'Please enter valid jersey number',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
       return false;
     }
 
     if (positionController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter player position');
+      Get.snackbar(
+        'Error',
+        'Please enter player position',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
+      return false;
+    }
+
+    if (selectedTeam.value == null) {
+      Get.snackbar(
+        'Error',
+        'Please select a team',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
+      return false;
+    }
+
+    // Advanced validations
+    int jerseyNumber = int.parse(jerseyNumberController.text.trim());
+    String playerName = playerNameController.text.trim();
+    int? teamId = selectedTeam.value?.sNo;
+    String teamName = selectedTeam.value?.tName ?? 'Unknown Team';
+
+    // Check if player already exists in the selected team
+    bool playerExistsInTeam = await DatabaseHelper.isPlayerExistsInTeam(
+      playerName,
+      teamId,
+    );
+    if (playerExistsInTeam) {
+      Get.snackbar(
+        'Error',
+        'Player "$playerName" already exists in team "$teamName"',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+        duration: Duration(seconds: 3),
+      );
+      return false;
+    }
+
+    // Check if jersey number already exists in the selected team
+    bool jerseyExistsInTeam = await DatabaseHelper.isJerseyNumberExistsInTeam(
+      jerseyNumber,
+      teamId,
+    );
+    if (jerseyExistsInTeam) {
+      Get.snackbar(
+        'Error',
+        'Jersey number $jerseyNumber is already taken in team "$teamName".\nPlease choose a different number.',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+        duration: Duration(seconds: 4),
+      );
       return false;
     }
 
@@ -218,14 +394,23 @@ class PlayerController extends GetxController {
     jerseyNumberController.clear();
     positionController.clear();
     selectedImagePath.value = '';
+    selectedTeam.value = null;
   }
 
   void resetForCreateScreen() {
     _clearForm();
+    // Refresh teams when resetting for create screen
+    loadAllTeams();
     // ignore: invalid_use_of_protected_member
     if (!playerNameController.hasListeners) {
       _initializeControllers();
     }
+  }
+
+  String get teamDisplayText {
+    return selectedTeam.value == null
+        ? '- Select Team -'
+        : selectedTeam.value!.tName;
   }
 
   @override

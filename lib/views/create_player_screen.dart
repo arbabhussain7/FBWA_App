@@ -16,6 +16,11 @@ class CreatePlayerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SOLUTION 2: Refresh teams when screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.refreshTeams();
+    });
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -154,7 +159,135 @@ class CreatePlayerScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 239.h),
+                      SizedBox(height: 17.h),
+                      // Team Selection Dropdown with Refresh Button
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.greyColor,
+                          borderRadius: BorderRadius.circular(3.r),
+                        ),
+                        child: Obx(
+                          () => controller.isLoadingTeams.value
+                              ? Container(
+                                  height: 48.h,
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 20.h,
+                                      width: 20.w,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              AppColors.whiteColor.withOpacity(
+                                                0.7,
+                                              ),
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      child: DropdownButtonFormField<int>(
+                                        value:
+                                            controller.selectedTeam.value?.sNo,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                            left: 12.w,
+                                            right: 8.w,
+                                          ),
+                                          hintText: controller.teamDisplayText,
+                                          hintStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontFamily: 'SegoeUI',
+                                            color: AppColors.whiteColor
+                                                .withOpacity(0.7),
+                                          ),
+                                          border: InputBorder.none,
+                                        ),
+                                        dropdownColor: AppColors.greyColor,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontFamily: 'SegoeUI',
+                                          color: AppColors.whiteColor
+                                              .withOpacity(0.7),
+                                        ),
+                                        icon: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.whiteColor
+                                              .withOpacity(0.7),
+                                        ),
+                                        items: [
+                                          DropdownMenuItem<int>(
+                                            value: null,
+                                            child: Text(
+                                              '- Select Team -',
+                                              style: TextStyle(
+                                                fontSize: 14.sp,
+                                                fontFamily: 'SegoeUI',
+                                                color: AppColors.whiteColor
+                                                    .withOpacity(0.7),
+                                              ),
+                                            ),
+                                          ),
+                                          ...controller.allTeams.map((team) {
+                                            return DropdownMenuItem<int>(
+                                              value: team.sNo,
+                                              child: Text(
+                                                team.tName,
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  fontFamily: 'SegoeUI',
+                                                  color: AppColors.whiteColor
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ],
+                                        onChanged: (int? value) {
+                                          if (value == null) {
+                                            controller.setSelectedTeam(null);
+                                          } else {
+                                            final selectedTeam = controller
+                                                .allTeams
+                                                .firstWhere(
+                                                  (team) => team.sNo == value,
+                                                );
+                                            controller.setSelectedTeam(
+                                              selectedTeam,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    // ADD REFRESH BUTTON
+                                    IconButton(
+                                      onPressed: () {
+                                        controller.refreshTeams();
+                                        Get.snackbar(
+                                          'Info',
+                                          'Teams refreshed!',
+                                          duration: Duration(seconds: 1),
+                                          snackPosition: SnackPosition.BOTTOM,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.refresh,
+                                        color: AppColors.whiteColor.withOpacity(
+                                          0.7,
+                                        ),
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 185.h,
+                      ), // Reduced height to accommodate dropdown
                       Obx(
                         () => GestureDetector(
                           onTap: controller.isLoading.value

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:football_app/constant/colors.dart';
 import 'package:football_app/viewModel/player_controller.dart';
 import 'package:football_app/views/splash_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -25,7 +26,17 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'FBWA',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            scaffoldBackgroundColor: AppColors.whiteColor,
+            primaryColor: AppColors.darkBlueColor,
+            progressIndicatorTheme: const ProgressIndicatorThemeData(
+              color: AppColors.darkBlueColor,
+              circularTrackColor: AppColors.darkBlueColor,
+            ),
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: AppColors.darkBlueColor,
+              selectionColor: AppColors.darkBlueColor.withOpacity(0.5),
+              selectionHandleColor: AppColors.darkBlueColor,
+            ),
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
           home: child,

@@ -1,14 +1,12 @@
 import 'package:football_app/data/localDB/db_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:football_app/model/team_model.dart';
 
 class TeamController extends GetxController {
   var teamName = ''.obs;
   var userEnteredLeague = ''.obs;
-  var selectedClub = ''.obs;
   var teamImage = ''.obs;
-
-  var selectedClubIndex = (-1).obs;
 
   var allTeams = <Team>[].obs;
   var isLoading = false.obs;
@@ -63,24 +61,25 @@ class TeamController extends GetxController {
     userEnteredLeague.value = league;
   }
 
-  void setClub(String club, int index) {
-    selectedClub.value = club;
-    selectedClubIndex.value = index;
-  }
-
   void setTeamImage(String imagePath) {
     teamImage.value = imagePath;
   }
 
   bool isFormValid() {
-    return teamName.value.isNotEmpty &&
-        userEnteredLeague.value.isNotEmpty &&
-        selectedClub.value.isNotEmpty;
+    return teamName.value.isNotEmpty && userEnteredLeague.value.isNotEmpty;
   }
 
   Future<bool> saveTeam() async {
     if (!isFormValid()) {
-      Get.snackbar('Error', 'Please fill all required fields');
+      Get.snackbar(
+        'Error',
+        'Please fill all required fields',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+      );
       return false;
     }
 
@@ -88,18 +87,49 @@ class TeamController extends GetxController {
       final team = Team(
         tName: teamName.value,
         tLeagues: userEnteredLeague.value,
-        tClub: selectedClub.value,
         tImg: teamImage.value.isNotEmpty ? teamImage.value : null,
       );
 
       await DatabaseHelper.insertTeam(team);
-      Get.snackbar('Success', 'Team created successfully!');
+      Get.snackbar(
+        'Success',
+        'Team created successfully!',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(12),
+        borderRadius: 8,
+        duration: Duration(seconds: 2),
+      );
 
       resetForm();
       await loadAllTeams();
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create team: $e');
+      // Handle specific error cases
+      if (e.toString().contains('Team name already exists')) {
+        Get.snackbar(
+          'Error',
+          'Team name "${teamName.value}" already exists. Please choose a different name.',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(12),
+          borderRadius: 8,
+          duration: Duration(seconds: 3),
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failed to create team. Please try again.',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(12),
+          borderRadius: 8,
+        );
+      }
+      print('Error creating team: $e'); // For debugging
       return false;
     }
   }
@@ -111,13 +141,7 @@ class TeamController extends GetxController {
   void resetForm() {
     teamName.value = '';
     userEnteredLeague.value = '';
-    selectedClub.value = '';
     teamImage.value = '';
-    selectedClubIndex.value = -1;
-  }
-
-  String get clubDisplayText {
-    return selectedClub.value.isEmpty ? '- Select Club -' : selectedClub.value;
   }
 
   String get formattedTotalCount {

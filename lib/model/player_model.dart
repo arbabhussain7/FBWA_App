@@ -4,6 +4,8 @@ class Player {
   int jNumber;
   String pPosition;
   String? pImg;
+  int? teamId; // Added team reference
+  String? teamName;
 
   Player({
     this.sNo,
@@ -11,8 +13,9 @@ class Player {
     required this.jNumber,
     required this.pPosition,
     this.pImg,
+    this.teamId,
+    this.teamName, // Add this
   });
-
   Map<String, dynamic> toMap() {
     return {
       's_no': sNo,
@@ -20,6 +23,7 @@ class Player {
       'j_number': jNumber,
       'p_position': pPosition,
       'p_img': pImg,
+      'team_id': teamId,
     };
   }
 
@@ -30,11 +34,8 @@ class Player {
       jNumber: map['j_number'],
       pPosition: map['p_position'],
       pImg: map['p_img'],
+      teamId: map['team_id'],
+      teamName: map['team_name'], // Add this
     );
-  }
-
-  @override
-  String toString() {
-    return 'Player{sNo: $sNo, pName: $pName, jNumber: $jNumber, pPosition: $pPosition, pImg: $pImg}';
   }
 }

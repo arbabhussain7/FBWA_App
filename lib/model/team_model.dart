@@ -2,14 +2,12 @@ class Team {
   int? sNo;
   String tName;
   String? tLeagues;
-  String tClub;
   String? tImg;
 
   Team({
     this.sNo,
     required this.tName,
     this.tLeagues,
-    required this.tClub,
     this.tImg,
   });
 
@@ -18,7 +16,6 @@ class Team {
       's_no': sNo,
       't_name': tName,
       't_leagues': tLeagues,
-      't_club': tClub,
       't_img': tImg,
     };
   }
@@ -28,8 +25,12 @@ class Team {
       sNo: map['s_no'],
       tName: map['t_name'] ?? '',
       tLeagues: map['t_leagues'],
-      tClub: map['t_club'] ?? '',
       tImg: map['t_img'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'Team{sNo: $sNo, tName: $tName, tLeagues: $tLeagues, tImg: $tImg}';
   }
 }

@@ -227,6 +227,22 @@ class PlayerManageScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          // Team name (top, bold)
+                                          if (player.teamName != null)
+                                            Text(
+                                              player.teamName!,
+                                              style: TextStyle(
+                                                fontSize: 13.sp,
+                                                color: AppColors.yellowColor,
+                                                fontFamily: 'SegoeUI',
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          if (player.teamName != null)
+                                            SizedBox(height: 2.h),
+
                                           // Player name
                                           Text(
                                             player.pName,
@@ -240,7 +256,9 @@ class PlayerManageScreen extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                           ),
-                                          SizedBox(height: 4.h),
+                                          SizedBox(height: 2.h),
+
+                                          // Position
                                           Text(
                                             player.pPosition,
                                             style: TextStyle(
