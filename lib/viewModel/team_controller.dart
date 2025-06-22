@@ -1,4 +1,5 @@
 import 'package:football_app/data/localDB/db_helper.dart';
+import 'package:football_app/model/player_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:football_app/model/team_model.dart';
@@ -50,6 +51,27 @@ class TeamController extends GetxController {
       await loadAllTeams();
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete team: $e');
+    }
+  }
+
+  // Add method to get players for a specific team
+  Future<List<Player>> getTeamPlayers(int teamId) async {
+    try {
+      List<Player> allPlayers = await DatabaseHelper.getAllPlayers();
+      return allPlayers.where((player) => player.teamId == teamId).toList();
+    } catch (e) {
+      print('Error getting team players: $e');
+      return [];
+    }
+  }
+
+  // Add method to get team by ID
+  Future<Team?> getTeamById(int teamId) async {
+    try {
+      return await DatabaseHelper.getTeamById(teamId);
+    } catch (e) {
+      print('Error getting team by ID: $e');
+      return null;
     }
   }
 

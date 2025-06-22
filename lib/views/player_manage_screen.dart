@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:football_app/constant/assets.dart';
 import 'package:football_app/constant/colors.dart';
 import 'package:football_app/viewModel/player_controller.dart';
-import 'package:football_app/views/create_player_screen.dart';
+import 'package:football_app/views/single_plyayer_detail_screen.dart';
 import 'package:football_app/views/widgets/custom_header.dart';
 import 'package:get/get.dart';
 
@@ -32,78 +31,13 @@ class PlayerManageScreen extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                CustomHeader(text: 'Player Manage'),
+                CustomHeader(text: 'Player Details'),
                 SizedBox(height: 12.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 12.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.greyColor,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.to(() => CreatePlayerScreen());
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Create a new player',
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  color: AppColors.whiteColor.withOpacity(0.7),
-                                  fontFamily: 'SegoeUI',
-                                ),
-                              ),
-                              SvgPicture.asset(ImageAssets.addIcon),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Obx(
-                        () => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'My Players History',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: AppColors.whiteColor.withOpacity(0.7),
-                                fontFamily: 'SegoeUI',
-                              ),
-                            ),
-                            if (controller.players.isNotEmpty)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w,
-                                  vertical: 4.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.yellowColor,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                                child: Text(
-                                  '${controller.players.length}',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: AppColors.whiteColor,
-                                    fontFamily: 'SegoeUI',
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
                       SizedBox(height: 12.h),
                       Obx(() {
                         if (controller.isLoading.value) {
@@ -161,7 +95,7 @@ class PlayerManageScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 8.h),
                                   Text(
-                                    'Tap "Create a new player" to get started',
+                                    'Create Your Player First ',
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       color: AppColors.whiteColor.withOpacity(
@@ -184,170 +118,183 @@ class PlayerManageScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final player = controller.players[index];
 
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 12.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.greyColor,
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: AppColors.yellowColor
-                                              .withOpacity(0.3),
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 26.r,
-                                        backgroundImage: _getPlayerImage(
-                                          player.pImg,
-                                        ),
-                                        onBackgroundImageError:
-                                            (exception, stackTrace) {
-                                              print(
-                                                'Error loading image: $exception',
-                                              );
-                                            },
-                                      ),
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(
+                                    () => SinglePlayerDetailScreen(
+                                      player: player,
                                     ),
-                                    SizedBox(width: 12.w),
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 12.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.greyColor,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: AppColors.yellowColor
+                                                .withOpacity(0.3),
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 26.r,
+                                          backgroundImage: _getPlayerImage(
+                                            player.pImg,
+                                          ),
+                                          onBackgroundImageError:
+                                              (exception, stackTrace) {
+                                                print(
+                                                  'Error loading image: $exception',
+                                                );
+                                              },
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
 
-                                    // Player info
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          // Team name (top, bold)
-                                          if (player.teamName != null)
+                                      // Player info
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Team name (top, bold)
+                                            if (player.teamName != null)
+                                              Text(
+                                                player.teamName!,
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  color: AppColors.yellowColor,
+                                                  fontFamily: 'SegoeUI',
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            if (player.teamName != null)
+                                              SizedBox(height: 2.h),
+
+                                            // Player name
                                             Text(
-                                              player.teamName!,
+                                              player.pName,
                                               style: TextStyle(
-                                                fontSize: 13.sp,
-                                                color: AppColors.yellowColor,
+                                                fontSize: 14.sp,
+                                                color: AppColors.whiteColor
+                                                    .withOpacity(0.9),
                                                 fontFamily: 'SegoeUI',
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
-                                          if (player.teamName != null)
                                             SizedBox(height: 2.h),
 
-                                          // Player name
-                                          Text(
-                                            player.pName,
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: AppColors.whiteColor
-                                                  .withOpacity(0.9),
-                                              fontFamily: 'SegoeUI',
-                                              fontWeight: FontWeight.w600,
+                                            // Position
+                                            Text(
+                                              player.pPosition,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: AppColors.aGreyColor,
+                                                fontFamily: 'SegoeUI',
+                                              ),
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6.w,
+                                              vertical: 4.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.yellowColor,
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(
+                                                  4.r,
+                                                ),
+                                                topLeft: Radius.circular(4.r),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'ID',
+                                              style: TextStyle(
+                                                fontSize: 10.sp,
+                                                color: AppColors.whiteColor,
+                                                fontFamily: 'SegoeUI',
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
-                                          SizedBox(height: 2.h),
-
-                                          // Position
-                                          Text(
-                                            player.pPosition,
-                                            style: TextStyle(
-                                              fontSize: 12.sp,
-                                              color: AppColors.aGreyColor,
-                                              fontFamily: 'SegoeUI',
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6.w,
+                                              vertical: 4.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                bottomRight: Radius.circular(
+                                                  4.r,
+                                                ),
+                                                topRight: Radius.circular(4.r),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              player.jNumber.toString(),
+                                              style: TextStyle(
+                                                fontSize: 10.sp,
+                                                color: AppColors.blackColor,
+                                                fontFamily: 'SegoeUI',
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 6.w,
-                                            vertical: 4.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.yellowColor,
-                                            borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(4.r),
-                                              topLeft: Radius.circular(4.r),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'ID',
-                                            style: TextStyle(
-                                              fontSize: 10.sp,
-                                              color: AppColors.whiteColor,
-                                              fontFamily: 'SegoeUI',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 6.w,
-                                            vertical: 4.h,
-                                          ),
+                                      SizedBox(width: 12.w),
+
+                                      // Delete button
+                                      GestureDetector(
+                                        onTap: () =>
+                                            _showDeleteConfirmation(player),
+                                        child: Container(
+                                          padding: EdgeInsets.all(6.r),
                                           decoration: BoxDecoration(
                                             color: AppColors.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(4.r),
-                                              topRight: Radius.circular(4.r),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            player.jNumber.toString(),
-                                            style: TextStyle(
-                                              fontSize: 10.sp,
-                                              color: AppColors.blackColor,
-                                              fontFamily: 'SegoeUI',
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(width: 12.w),
-
-                                    // Delete button
-                                    GestureDetector(
-                                      onTap: () =>
-                                          _showDeleteConfirmation(player),
-                                      child: Container(
-                                        padding: EdgeInsets.all(6.r),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.whiteColor,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.1,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.1,
+                                                ),
+                                                blurRadius: 4,
+                                                offset: Offset(0, 2),
                                               ),
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Image.asset(
-                                          ImageAssets.deteleImg,
-                                          color: AppColors.redColor,
-                                          width: 16.w,
-                                          height: 16.h,
+                                            ],
+                                          ),
+                                          child: Image.asset(
+                                            ImageAssets.deteleImg,
+                                            color: AppColors.redColor,
+                                            width: 16.w,
+                                            height: 16.h,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },

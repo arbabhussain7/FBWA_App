@@ -16,7 +16,6 @@ class CreatePlayerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SOLUTION 2: Refresh teams when screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.refreshTeams();
     });

@@ -32,4 +32,5 @@ class ImageAssets {
   static const String rclImg = 'assets/images/rcl-img.png';
   static const String ttlImg = 'assets/images/ttl-img.png';
   static const String mulImg = 'assets/images/mul-img.png';
+  static const String detailImgPT = 'assets/images/m-team-imgs.png';
 }

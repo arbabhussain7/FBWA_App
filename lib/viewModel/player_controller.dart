@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:football_app/data/localDB/db_helper.dart';
 import 'package:football_app/model/player_model.dart';
 import 'package:football_app/model/team_model.dart';
-import 'package:football_app/views/player_manage_screen.dart';
+import 'package:football_app/views/home_screen.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +12,6 @@ class PlayerController extends GetxController {
   late TextEditingController playerNameController;
   late TextEditingController jerseyNumberController;
   late TextEditingController positionController;
-
   var isLoading = false.obs;
   var players = <Player>[].obs;
   var totalPlayersCount = 0.obs;
@@ -32,11 +31,9 @@ class PlayerController extends GetxController {
     loadAllTeams();
   }
 
-  // ADD THIS METHOD - This will be called whenever the screen becomes visible
   @override
   void onReady() {
     super.onReady();
-    // Refresh teams when screen is ready (good for when coming from team creation)
     loadAllTeams();
   }
 
@@ -58,8 +55,6 @@ class PlayerController extends GetxController {
       isLoadingTeams.value = false;
     }
   }
-
-  // ADD THIS METHOD - Force refresh teams (can be called manually)
   Future<void> refreshTeams() async {
     print('Refreshing teams...'); // Debug log
     await loadAllTeams();
@@ -231,7 +226,7 @@ class PlayerController extends GetxController {
         borderRadius: 8,
         duration: Duration(seconds: 2),
       );
-      Get.off(() => PlayerManageScreen());
+      Get.off(() => HomeScreen());
     } catch (e) {
       // Check if it's a UNIQUE constraint error for jersey number
       if (e.toString().contains('UNIQUE constraint failed') &&
